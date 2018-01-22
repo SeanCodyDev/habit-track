@@ -1,11 +1,104 @@
+//START CUSTOMIZATION
+
+var Post       = require('../app/models/posts');
+var User       = require('../app/models/user');
+var Question   = require('../app/models/questions');
+const bodyParser = require('body-parser');
+const jsonParser = bodyParser.json();
+
+
+
 module.exports = function(app, passport) {
+
+    app.post('/submit-quiz', isLoggedIn, function(req, res){
+        console.log(req.body);
+        User.update(
+            {_id:req.user._id}, 
+            {$set: 
+                { 
+                    "quiz.status":true,
+                    "quiz.questions": req.body
+                }
+            }, function(result){ 
+            // {$set: 
+            //     { 
+            //         quiz:true }, $set : {"quiz.$.questions": req.body}}, function(result){ 
+            // console.log(result);
+            res.redirect('/profile') 
+        });
+    });
+
+    app.post('/post', function(req, res) {
+        console.log(req.body);
+        let p = new Post(req.body);
+        p.save(function(err){
+            res.redirect('/');
+
+        });
+    });
+
+    app.get('/', function(req, res) {
+        Post.find().exec().then(results => {
+            console.log(results);
+            res.render('index.ejs', {posts: results});
+
+        }).catch(err => { 
+            throw err
+        });
+
+    });
+
+    //POST QUESTIONS
+    app.post('/questions', jsonParser, (req, res) => {
+        console.log(req.body);
+        const requiredFields = ['text'];//, 'answers', 'answerType'];
+        for (let i=0; i<requiredFields.length; i++){
+            const field = requiredFields[i];
+            if (!(field in req.body)){
+                const message = `Missing \`${field}\` in request body`;
+                console.error(message);
+                return res.status(400).send(message);
+            }
+        }
+
+        Question 
+            .create({
+                text: req.body.text
+                // ,
+                // answers: req.body.answers,
+                // answerType: req.body.answerType
+            })
+            .then(results => {
+                res.status(201).json(results);
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).json({ message: 'Internal server error' });
+            });
+    });
+
+    app.get('/questions', (req, res) => {
+        Question.find()
+        .then(results => {
+            console.log(results);
+            res.json(results);
+            res.render('profile.ejs', {questions: results});
+
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error'});
+        });
+    });
+
+// END CUSTOMIZATION
 
 // normal routes ===============================================================
 
     // show the home page (will also have our login links)
-    app.get('/', function(req, res) {
-        res.render('index.ejs');
-    });
+    // app.get('/', function(req, res) {
+    //     res.render('index.ejs');
+    // });
 
     // PROFILE SECTION =========================
     app.get('/profile', isLoggedIn, function(req, res) {

@@ -1,9 +1,11 @@
 <!doctype html>
 <html>
 <head>
-    <title>Node Authentication</title>
+    <title>Habit Track</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href='stylesheets/style.css'>
+
     <style>
         body         { padding-top:80px; word-wrap:break-word; }
     </style>
@@ -17,6 +19,50 @@
     </div>
 
     <div class="row">
+
+<!-- This quiz-box section will be visible only if the user has not yet taken the quiz. The page will load with a prompt to start the quiz, and the quiz questions and results will be dynamically loaded -->
+        <div class="col-sm-12 assessment-box">
+            <% if (!user.quiz.status) { %>
+                <h2>HABIT ASSESSMENT</h2>
+                <p>Start your Habit Assessment</p>
+                <form action="/profile" method="GET">
+                    <button type="submit" class="start-assessment-button">Start Assessment</button>    
+                </form>
+                
+                <section>
+                    <table>
+                        <% for(var i=0; i < questions.length; i++) { %>
+                        <tr>
+                            <td><%= questions[i].text %></td>
+                            <td><a href="<%=questions[i]._id %>">link</a></td>
+                        </tr>
+                        <% } %>
+                    </table>
+                </section>
+
+
+<!-- This form will dynamically load after the 'Start Assessment' button has been clicked -->
+                <!-- <form method="POST" action="/submit-quiz">
+                    <fieldset>How many ounces of water do you typically drink daily?
+                        <input type="radio" name="questionOne" value="40">Less than 40</input>
+                        <input type="radio" name="questionOne" value="40-60">40-60</input>
+                        <input type="radio" name="questionOne" value="60-80">60-80</input>
+                        <input type="radio" name="questionOne" value="80">More than 80</input>
+                    </fieldset>
+                    <br>
+                    <fieldset>What other beverages do you drink regularly (choose all that apply)?
+                        <input type="checkbox" name="questionTwo" value="alcohol">Alcohol (more than 3 weekly)</input>
+                        <input type="checkbox" name="questionTwo" value="coffee">Coffee</input>
+                        <input type="checkbox" name="questionTwo" value="tea">Tea</input>
+                        <input type="checkbox" name="questionTwo" value="soda-energy">Soda or Energy Drinks</input>
+                    </fieldset>
+                    <button type="submit">Submit</button>
+                </form> -->
+                <% } else { %>
+                <h2>QUIZ DONE</h2>
+            <% } %>
+        </div>
+
 
         <!-- LOCAL INFORMATION -->
         <div class="col-sm-6">

@@ -1,0 +1,11 @@
+*{
+	box-sizing: border-box;
+}
+
+.assessment-box {
+	border: 5px;
+}
+
+.hidden{
+	display: none;
+}
