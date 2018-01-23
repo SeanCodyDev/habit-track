@@ -81,8 +81,8 @@ module.exports = function(app, passport) {
         Question.find()
         .then(results => {
             console.log(results);
-            res.json(results);
-            res.render('profile.ejs', {questions: results});
+            // res.json(results);
+            // res.render('profile.ejs', {questions: results});
 
         })
         .catch(err => {
