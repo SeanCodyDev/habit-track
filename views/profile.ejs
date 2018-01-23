@@ -25,20 +25,24 @@
             <% if (!user.quiz.status) { %>
                 <h2>HABIT ASSESSMENT</h2>
                 <p>Start your Habit Assessment</p>
-                <form action="/profile" method="GET">
+                <!-- <form action="/profile" method="GET">
                     <button type="submit" class="start-assessment-button">Start Assessment</button>    
-                </form>
+                </form> -->
                 
                 <section>
-                    <table>
+                    <form action="/submit-quiz" method="post">
                         <% for(var i=0; i < questions.length; i++) { %>
-                        <tr>
-                            <td><%= questions[i].text %></td>
-                            <td><a href="<%=questions[i]._id %>">link</a></td>
-                        </tr>
+                            <p><b><%= questions[i].text %>:</b></p>
+                            <!-- another loop here to render the answers/inputs -->
+                            <% for(var j=0; j < questions[i].answers.length; j++) { %>
+                                <input type="<%= questions[i].answerType %>" name="<%= questions[i].name %>" value="<%= questions[i].answers[j] %>" /> <%= questions[i].answers[j] %><br />
+                            <% } %>
+
                         <% } %>
-                    </table>
+                        <input type="submit" value="Submit">
+                    </form>
                 </section>
+
 
 
 <!-- This form will dynamically load after the 'Start Assessment' button has been clicked -->

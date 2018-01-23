@@ -1,3 +1,5 @@
+//this file is currently unused, but was what I pictured using for a client-side handling of the initial health assessment
+
 //----- HABIT ASSESSMENT -----
 
 // Array containing questions, answers, and answer types to be dynamically loaded in assesment box

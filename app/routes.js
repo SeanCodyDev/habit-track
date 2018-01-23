@@ -10,6 +10,7 @@ const jsonParser = bodyParser.json();
 
 module.exports = function(app, passport) {
 
+    //this route updates the user's document's answers from their initial health assessment
     app.post('/submit-quiz', isLoggedIn, function(req, res){
         console.log(req.body);
         User.update(
@@ -77,12 +78,12 @@ module.exports = function(app, passport) {
             });
     });
 
-    app.get('/questions', (req, res) => {
+    app.get('/profile', isLoggedIn, (req, res) => {
         Question.find()
         .then(results => {
             console.log(results);
             // res.json(results);
-            // res.render('profile.ejs', {questions: results});
+            res.render('profile.ejs', {user : req.user, questions: results});
 
         })
         .catch(err => {
@@ -90,6 +91,7 @@ module.exports = function(app, passport) {
             res.status(500).json({ message: 'Internal server error'});
         });
     });
+
 
 // END CUSTOMIZATION
 
@@ -101,11 +103,11 @@ module.exports = function(app, passport) {
     // });
 
     // PROFILE SECTION =========================
-    app.get('/profile', isLoggedIn, function(req, res) {
-        res.render('profile.ejs', {
-            user : req.user
-        });
-    });
+    // app.get('/profile', isLoggedIn, function(req, res) {
+    //     res.render('profile.ejs', {
+    //         user : req.user
+    //     });
+    // });
 
     // LOGOUT ==============================
     app.get('/logout', function(req, res) {
