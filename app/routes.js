@@ -6,25 +6,55 @@ var Question   = require('../app/models/questions');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
+//analyze and recommend habit (can this be written in a separate function?)
+//answer key to associate answers with numerical values
+const answerKey = {
+    "Less than 40": 1,
+    "40-60": 2,
+    "More than 60": 3
+    };
 
+
+function chooseHabit(data){
+    let h= 0;
+    let habit;
+    for (var key in data) {
+        if (data.hasOwnProperty(key)) {
+            if (answerKey[data[key]] > h){
+                h = answerKey[data[key]];
+                habit = key;
+            }
+
+            // h = data[key] > h ? (data[key], habit = key):h
+            console.log(key + " -> " + data[key]);
+        }
+    }
+    console.log(habit);
+    return habit;
+}
 
 module.exports = function(app, passport) {
+
+
 
     //this route updates the user's document's answers from their initial health assessment
     app.post('/submit-quiz', isLoggedIn, function(req, res){
         console.log(req.body);
-        User.update(
-            {_id:req.user._id}, 
-            {$set: 
-                { 
+        let userUpdates =  {
                     "quiz.status":true,
                     "quiz.questions": req.body
-                }
+                };
+        //analyze and recommend habit (can this be written in a separate function?)
+        userUpdates["quiz.habit"] = chooseHabit(req.body);
+        User.update(
+            {_id:req.user._id}, 
+            {$set: userUpdates
+                // { 
+                //     "quiz.status":true,
+                //     "quiz.questions": req.body
+                // }
             }, function(result){ 
-            // {$set: 
-            //     { 
-            //         quiz:true }, $set : {"quiz.$.questions": req.body}}, function(result){ 
-            // console.log(result);
+
             res.redirect('/profile') 
         });
     });
@@ -64,10 +94,10 @@ module.exports = function(app, passport) {
 
         Question 
             .create({
-                text: req.body.text
-                // ,
-                // answers: req.body.answers,
-                // answerType: req.body.answerType
+                text: req.body.text,
+                answers: req.body.answers,
+                answerType: req.body.answerType,
+                name: req.body.name
             })
             .then(results => {
                 res.status(201).json(results);

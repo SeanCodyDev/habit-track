@@ -4,7 +4,7 @@
     <title>Habit Track</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href='stylesheets/style.css'>
+    <link rel="stylesheet" type="text/css" href='../stylesheets/style.css'>
 
     <style>
         body         { padding-top:80px; word-wrap:break-word; }
@@ -67,6 +67,9 @@
             <% } %>
         </div>
 
+        <div class="col-sm-12 current-day">
+            <h2>Current Day</h2>
+        </div>
 
         <!-- LOCAL INFORMATION -->
         <div class="col-sm-6">
@@ -159,6 +162,10 @@
         <p>A demo by <a href="http://scotch.io">Scotch</a>.</p>
         <p>Visit the <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-setup-and-local">tutorial</a>.</p>
     </div>
+
+    <% include includes/footer.ejs %>
+    <% include pie.ejs %>
+
 
 </div>
 </body>

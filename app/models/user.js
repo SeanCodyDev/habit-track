@@ -9,7 +9,8 @@ var userSchema = mongoose.Schema({
             type     : Boolean,
             default  : false 
         },
-        questions    : Object
+        questions    : Array,
+        habit        : String
     },  
     local            : {
         email        : String,
@@ -35,6 +36,7 @@ var userSchema = mongoose.Schema({
     }
 
 });
+
 
 // generating a hash
 userSchema.methods.generateHash = function(password) {

@@ -1,0 +1,80 @@
+/*body {
+  font-family: "Open Sans", sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  width: 960px;
+  height: 500px;
+  position: relative;
+  background-color: #333;
+  margin: 0 auto;
+}*/
+
+#graph {
+  border-radius: 5px 5px 0 0;
+  padding-top: 50px;
+  margin: 25px auto 0;
+  height: 100%;
+  background-color: #fff;
+}
+#graph svg {
+  width: 100% !important;
+}
+#graph .slice {
+  stroke: white;
+  stroke-width: 5px;
+}
+#graph .slice:hover {
+  opacity: .5;
+}
+#graph .labels text {
+  background-color: #333;
+  width: 200px;
+}
+
+#adjust {
+  outline: transparent;
+  padding: 25px 0;
+  background-color: #eee;
+  text-align: center;
+  line-height: 50px;
+  box-shadow: 0px 4px 6px #000;
+}
+#adjust button {
+  padding: 10px 20px;
+  text-transform: uppercase;
+  letter-spacing: 5px;
+  color: #fff;
+  background: #333;
+  border: none;
+  border-radius: 5px;
+  font: 10px "avenir";
+  cursor: pointer;
+}
+#adjust button:focus {
+  outline: none;
+}
+#adjust button:hover {
+  background: #222;
+}
+#adjust input {
+  font-size: 18px;
+  padding: 10px;
+  width: 50px;
+  text-align: center;
+  color: #30AD63;
+}
+
+svg {
+  width: 100%;
+  height: 100%;
+}
+
+path.slice {
+  stroke-width: 5px;
+}
+
+polyline {
+  stroke: #333;
+  stroke-width: 1px;
+  fill: none;
+}
