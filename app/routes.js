@@ -45,7 +45,7 @@ module.exports = function(app, passport) {
                     "quiz.questions": req.body
                 };
         //analyze and recommend habit (can this be written in a separate function?)
-        userUpdates["quiz.habit"] = chooseHabit(req.body);
+        userUpdates["habit.currentHabit"] = chooseHabit(req.body);
         User.update(
             {_id:req.user._id}, 
             {$set: userUpdates
@@ -55,18 +55,41 @@ module.exports = function(app, passport) {
                 // }
             }, function(result){ 
 
+            res.redirect('/choose-habit') 
+        });
+    });
+
+    //this route renders the 'choose-habit' page
+    app.get('/choose-habit', isLoggedIn, function (req, res) {
+        let habits = ["stress", "water"];
+        res.render('choose-habit.ejs', {habits: habits});
+
+    });
+
+    //this route updates the current user with the habit chosen on '/choose-habit'
+    app.post('/choose-habit', isLoggedIn, function (req, res) {
+        console.log(req.body);
+        User.update(
+            {_id:req.user._id}, 
+            {$set: 
+                { 
+                    "habit.currentHabit": req.body.chooseHabit
+                }
+            }, function(result){ 
+
             res.redirect('/profile') 
         });
     });
 
-    app.post('/post', function(req, res) {
-        console.log(req.body);
-        let p = new Post(req.body);
-        p.save(function(err){
-            res.redirect('/');
+// OBSOLETE? =======
+    // app.post('/post', function(req, res) {
+    //     console.log(req.body);
+    //     let p = new Post(req.body);
+    //     p.save(function(err){
+    //         res.redirect('/');
 
-        });
-    });
+    //     });
+    // });
 
     app.get('/', function(req, res) {
         Post.find().exec().then(results => {
@@ -111,9 +134,10 @@ module.exports = function(app, passport) {
     app.get('/profile', isLoggedIn, (req, res) => {
         Question.find()
         .then(results => {
-            console.log(results);
+            // console.log(results);
             // res.json(results);
             res.render('profile.ejs', {user : req.user, questions: results});
+
 
         })
         .catch(err => {

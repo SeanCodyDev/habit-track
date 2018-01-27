@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+    <title>Habit Track</title>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href='../stylesheets/style.css'>
+
+    <style>
+        body         { padding-top:80px; word-wrap:break-word; }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
+        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
+    </div>
+
+    <div class="row">
+
+<!-- This quiz-box section will be visible only if the user has not yet taken the quiz. The page will load with a prompt to start the quiz, and the quiz questions and results will be dynamically loaded -->
+        <div class="col-sm-12 assessment-box">
+            <h2>Choose Habit Page</h2>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- These buttons are used to update the user.habit.currentHabit key -->
+        <!-- It will use a PUT method to '/habit-update'... need to look into req.body to find where the specific habit text will be available -->
+        <!-- These habit options are currently hardcoded... but they ought to be rendered with a function in 'routes.js' when GET '/choose-habits' is requested, using an array of habit options -->
+        <form action="/choose-habit" method="post">
+            <input type="radio" name="chooseHabit" value="water">Water<br />
+            <% for(var i=0; i < habits.length; i++) { %>
+                <p><b><%= habits[i] %>:</b></p>
+                <input type="radio" name="chooseHabit" value="<%= habits[i] %>" /> <%= habits[i] %><br />
+
+            <% } %>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <div class="text-center">
+        <p>A demo by <a href="http://scotch.io">Scotch</a>.</p>
+        <p>Visit the <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-setup-and-local">tutorial</a>.</p>
+    </div>
+
+<!--     <% include includes/footer.ejs %>
+ -->    
+
+
+</div>
+</body>
+</html>

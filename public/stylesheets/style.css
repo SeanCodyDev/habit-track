@@ -2,7 +2,7 @@
 	box-sizing: border-box;
 }
 
-.assessment-box {
+.assessment-box, .user-stats-box, .current-day-box, .user-stats-image, .user-stats-details, .user-stats-graph, .community-box {
 	border: 5px solid black;
 }
 

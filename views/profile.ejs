@@ -25,9 +25,6 @@
             <% if (!user.quiz.status) { %>
                 <h2>HABIT ASSESSMENT</h2>
                 <p>Start your Habit Assessment</p>
-                <!-- <form action="/profile" method="GET">
-                    <button type="submit" class="start-assessment-button">Start Assessment</button>    
-                </form> -->
                 
                 <section>
                     <form action="/submit-quiz" method="post">
@@ -43,34 +40,62 @@
                     </form>
                 </section>
 
-
-
-<!-- This form will dynamically load after the 'Start Assessment' button has been clicked -->
-                <!-- <form method="POST" action="/submit-quiz">
-                    <fieldset>How many ounces of water do you typically drink daily?
-                        <input type="radio" name="questionOne" value="40">Less than 40</input>
-                        <input type="radio" name="questionOne" value="40-60">40-60</input>
-                        <input type="radio" name="questionOne" value="60-80">60-80</input>
-                        <input type="radio" name="questionOne" value="80">More than 80</input>
-                    </fieldset>
-                    <br>
-                    <fieldset>What other beverages do you drink regularly (choose all that apply)?
-                        <input type="checkbox" name="questionTwo" value="alcohol">Alcohol (more than 3 weekly)</input>
-                        <input type="checkbox" name="questionTwo" value="coffee">Coffee</input>
-                        <input type="checkbox" name="questionTwo" value="tea">Tea</input>
-                        <input type="checkbox" name="questionTwo" value="soda-energy">Soda or Energy Drinks</input>
-                    </fieldset>
-                    <button type="submit">Submit</button>
-                </form> -->
                 <% } else { %>
-                <h2>QUIZ DONE</h2>
-            <% } %>
+<!--                 <h2>QUIZ DONE</h2>
+ -->            <% } %>
+        </div>
+    </div>
+
+    <div class="row user-stats-box">
+        <h2>User Stats</h2>
+        <div class="col-sm-3 user-stats-image">
+            <h3>user image</h3>
+        </div>
+        <div class="col-sm-6 user-stats-details">
+            <h3>user stats details</h3>
+            <ul>
+                <li>Current Habit: <%= user.habit.currentHabit %></li>
+                <li>Days on this Habit: <%= user.habit.daysOnHabit %> </li>
+                <li>Current Streak: <%= user.habit.currentStreak %></li>
+                <li>Best Streak: <%= user.habit.bestStreak %></li>
+            </ul>
+        </div>
+        <div class="col-sm-3 user-stats-graph">
+            <h3>stats graph</h3>
+            <!-- <% include pie.ejs %> -->
+            <ul>
+                <li>% progress toward 30 day goal</li>
+            </ul>
         </div>
 
-        <div class="col-sm-12 current-day">
-            <h2>Current Day</h2>
-        </div>
+    </div>
 
+
+
+    <div class="row current-day-box">
+        <h2>Current Day</h2>
+        <form>
+            <fieldset>
+                <p>Ex. Have you drank at least 64 oz of water today?</p>
+                <input type="radio" name="daily-habit" value="true" /> Yes <br />
+                <input type="radio" name="daily-habit" value="false" /> No <br />
+            </fieldset>
+            <input type="submit" value="Submit">
+        </form>
+        <h3>(Insert random daily habit tip - relevant to habit here)</h3>
+    </div>
+
+    <div class="row community-box">
+        <h2>Community News</h2>
+        <h3>There are 50 other people working on WATER!</h3>
+        <ul>
+            <li>Ex. "Jane D. just finished 30 days working on water!"</li>
+            <li>Ex. "John D just started working on stress!"</li>
+        </ul>
+        
+    </div>
+
+    <div class="row">
         <!-- LOCAL INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
@@ -164,7 +189,7 @@
     </div>
 
     <% include includes/footer.ejs %>
-    <% include pie.ejs %>
+    
 
 
 </div>

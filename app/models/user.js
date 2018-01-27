@@ -12,6 +12,13 @@ var userSchema = mongoose.Schema({
         questions    : Array,
         habit        : String
     },  
+    habit            : {
+        currentHabit : String,
+        daysOnHabit  : Number,
+        currentStreak: Number,
+        bestStreak   : Number,
+
+    },
     local            : {
         email        : String,
         password     : String
