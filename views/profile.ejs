@@ -32,7 +32,7 @@
                             <p><b><%= questions[i].text %>:</b></p>
                             <!-- another loop here to render the answers/inputs -->
                             <% for(var j=0; j < questions[i].answers.length; j++) { %>
-                                <input type="<%= questions[i].answerType %>" name="<%= questions[i].name %>" value="<%= questions[i].answers[j] %>" /> <%= questions[i].answers[j] %><br />
+                                <input type="<%= questions[i].answerType %>" name="<%= questions[i].category %> <%= questions[i].name %>" value="<%= questions[i].answers[j].score %>" /> <%= questions[i].answers[j].text %><br />
                             <% } %>
 
                         <% } %>

@@ -9,7 +9,8 @@ const questionSchema = mongoose.Schema({
 	answers: Array,
 	answerType: String,
 	//name of the question
-	name: String
+	name: String,
+	category: String
 });
 
 // var question = {

@@ -14,23 +14,33 @@ const answerKey = {
     "More than 60": 3
     };
 
+const HABIT_LIST = ["stress", "water", "sleep", "exercise", "nutrition"];
 
+
+//choosehabit loops over the answers in req.body; if the question answered has a specific category, then that habit score is incremented.
+//Scores are kept in an object with habit: score pairs
+//'data' includes just an object with key:value pairs 'name':'score'
 function chooseHabit(data){
-    let h= 0;
-    let habit;
-    for (var key in data) {
-        if (data.hasOwnProperty(key)) {
-            if (answerKey[data[key]] > h){
-                h = answerKey[data[key]];
-                habit = key;
-            }
+    let highScorehabit;
+    let habitScores = {};
 
-            // h = data[key] > h ? (data[key], habit = key):h
-            console.log(key + " -> " + data[key]);
+    for (let i=0; i<HABIT_LIST.length; i++){
+        //initialize key values as numbers
+        habitScores[HABIT_LIST[i]] = 0;
+
+        for (var key in data) {
+            if (key.includes(HABIT_LIST[i])){
+
+                habitScores[HABIT_LIST[i]] += parseInt(data[key]);
+
+            }     
         }
+        //check habitScore[i] against other habit scores and set highScoreHabit
+        highScorehabit = Object.keys(habitScores).reduce(function(a, b){ return habitScores[a] > habitScores[b] ? a : b });
     }
-    console.log(habit);
-    return habit;
+
+    console.log(habitScores, highScorehabit);
+    return highScorehabit;
 }
 
 module.exports = function(app, passport) {
@@ -105,7 +115,7 @@ module.exports = function(app, passport) {
     //POST QUESTIONS
     app.post('/questions', jsonParser, (req, res) => {
         console.log(req.body);
-        const requiredFields = ['text'];//, 'answers', 'answerType'];
+        const requiredFields = ['text', 'answers', 'answerType', 'name'];
         for (let i=0; i<requiredFields.length; i++){
             const field = requiredFields[i];
             if (!(field in req.body)){
