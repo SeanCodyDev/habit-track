@@ -14,6 +14,7 @@ var userSchema = mongoose.Schema({
     },  
     habit            : {
         currentHabit : String,
+        startDate    : String,
         daysOnHabit  : Number,
         currentStreak: Number,
         bestStreak   : Number,

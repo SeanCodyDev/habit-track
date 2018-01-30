@@ -6,13 +6,7 @@ var Question   = require('../app/models/questions');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
-//analyze and recommend habit (can this be written in a separate function?)
-//answer key to associate answers with numerical values
-const answerKey = {
-    "Less than 40": 1,
-    "40-60": 2,
-    "More than 60": 3
-    };
+
 
 const HABIT_LIST = ["stress", "water", "sleep", "exercise", "nutrition"];
 
@@ -43,6 +37,19 @@ function chooseHabit(data){
     return highScorehabit;
 }
 
+//generic function to count how many days since user has started a habit
+function upTime(countTo) {
+  
+  now = new Date();
+  countTo = new Date(parseInt(countTo));
+  difference = (now-countTo);
+
+  days=Math.floor(difference/(60*60*1000*24)*1+1);
+
+  return days;  
+}
+
+
 module.exports = function(app, passport) {
 
 
@@ -52,7 +59,8 @@ module.exports = function(app, passport) {
         console.log(req.body);
         let userUpdates =  {
                     "quiz.status":true,
-                    "quiz.questions": req.body
+                    "quiz.questions": req.body,
+                    "habit.startDate": Date.now()
                 };
         //analyze and recommend habit (can this be written in a separate function?)
         userUpdates["habit.currentHabit"] = chooseHabit(req.body);
@@ -71,8 +79,8 @@ module.exports = function(app, passport) {
 
     //this route renders the 'choose-habit' page
     app.get('/choose-habit', isLoggedIn, function (req, res) {
-        let habits = ["stress", "water"];
-        res.render('choose-habit.ejs', {habits: habits});
+        // let habits = ["Stress", "Water", "Sleep", "Nutriton", "Exercise"];
+        res.render('choose-habit.ejs', {user : req.user, habits: HABIT_LIST});
 
     });
 
@@ -83,7 +91,9 @@ module.exports = function(app, passport) {
             {_id:req.user._id}, 
             {$set: 
                 { 
-                    "habit.currentHabit": req.body.chooseHabit
+                    "habit.currentHabit": req.body.chooseHabit,
+                    //if the user selects the same habit they are currently on, this should not change
+                    "habit.startDate": Date.now()
                 }
             }, function(result){ 
 
@@ -142,10 +152,20 @@ module.exports = function(app, passport) {
     });
 
     app.get('/profile', isLoggedIn, (req, res) => {
+
+        //update days on habit
+        User.update(
+            {_id:req.user._id}, 
+            {$set: 
+                { 
+                    "habit.daysOnHabit": upTime(req.user.habit.startDate)
+                }
+            }, function(result){ 
+
+        });
+
         Question.find()
         .then(results => {
-            // console.log(results);
-            // res.json(results);
             res.render('profile.ejs', {user : req.user, questions: results});
 
 
@@ -154,6 +174,8 @@ module.exports = function(app, passport) {
             console.error(err);
             res.status(500).json({ message: 'Internal server error'});
         });
+
+
     });
 
 
