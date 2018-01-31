@@ -62,5 +62,6 @@ If you would like to download the code and try it for yourself:
 
 1) On a scale of 1-3, how would you rate your regular choice of healthy foods? (1, 2, 3)
 2) How often do you eat breakfast? (Never, Sometimes, Always)
-3) How often do you experience cravings for sweet, salty, or oily foods? (Never, Sometimes, Always)
+3) How often do you experience unhealthy food cravings? (Never, Sometimes, Always)
+
 

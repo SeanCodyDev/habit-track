@@ -3,12 +3,17 @@
 var Post       = require('../app/models/posts');
 var User       = require('../app/models/user');
 var Question   = require('../app/models/questions');
+const moment = require('moment');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 
 
-
 const HABIT_LIST = ["stress", "water", "sleep", "exercise", "nutrition"];
+
+// Set new moment thresholds
+  moment.relativeTimeThreshold('s', 1);
+  moment.relativeTimeThreshold('m', 1);
+  moment.relativeTimeThreshold('h', 0.001);
 
 
 //choosehabit loops over the answers in req.body; if the question answered has a specific category, then that habit score is incremented.
@@ -37,17 +42,6 @@ function chooseHabit(data){
     return highScorehabit;
 }
 
-//generic function to count how many days since user has started a habit
-function upTime(countTo) {
-  
-  now = new Date();
-  countTo = new Date(parseInt(countTo));
-  difference = (now-countTo);
-
-  days=Math.floor(difference/(60*60*1000*24)*1+1);
-
-  return days;  
-}
 
 
 module.exports = function(app, passport) {
@@ -56,12 +50,13 @@ module.exports = function(app, passport) {
 
     //this route updates the user's document's answers from their initial health assessment
     app.post('/submit-quiz', isLoggedIn, function(req, res){
-        console.log(req.body);
+        // console.log(req.body);
         let userUpdates =  {
                     "quiz.status":true,
                     "quiz.questions": req.body,
-                    "habit.startDate": Date.now()
+                    "habit.startDate": moment().format("x")
                 };
+        console.log(userUpdates);
         //analyze and recommend habit (can this be written in a separate function?)
         userUpdates["habit.currentHabit"] = chooseHabit(req.body);
         User.update(
@@ -73,7 +68,7 @@ module.exports = function(app, passport) {
                 // }
             }, function(result){ 
 
-            res.redirect('/choose-habit') 
+            res.redirect('/profile') 
         });
     });
 
@@ -86,30 +81,20 @@ module.exports = function(app, passport) {
 
     //this route updates the current user with the habit chosen on '/choose-habit'
     app.post('/choose-habit', isLoggedIn, function (req, res) {
-        console.log(req.body);
+        // console.log(req.body);
         User.update(
             {_id:req.user._id}, 
             {$set: 
                 { 
                     "habit.currentHabit": req.body.chooseHabit,
                     //if the user selects the same habit they are currently on, this should not change
-                    "habit.startDate": Date.now()
+                    "habit.startDate": moment()
                 }
             }, function(result){ 
 
             res.redirect('/profile') 
         });
     });
-
-// OBSOLETE? =======
-    // app.post('/post', function(req, res) {
-    //     console.log(req.body);
-    //     let p = new Post(req.body);
-    //     p.save(function(err){
-    //         res.redirect('/');
-
-    //     });
-    // });
 
     app.get('/', function(req, res) {
         Post.find().exec().then(results => {
@@ -153,20 +138,13 @@ module.exports = function(app, passport) {
 
     app.get('/profile', isLoggedIn, (req, res) => {
 
-        //update days on habit
-        User.update(
-            {_id:req.user._id}, 
-            {$set: 
-                { 
-                    "habit.daysOnHabit": upTime(req.user.habit.startDate)
-                }
-            }, function(result){ 
-
-        });
+        let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
+        console.log(req.user.habit.startDate);
+        console.log(daysOnHabit);
 
         Question.find()
         .then(results => {
-            res.render('profile.ejs', {user : req.user, questions: results});
+            res.render('profile.ejs', {user : req.user, questions: results, daysOnHabit: daysOnHabit});
 
 
         })
