@@ -6,6 +6,10 @@ var Question   = require('../app/models/questions');
 const moment = require('moment');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
+let tips = require('./tips');
+
+//daily tips test
+
 
 
 const HABIT_LIST = ["stress", "water", "sleep", "exercise", "nutrition"];
@@ -46,8 +50,6 @@ function chooseHabit(data){
 
 module.exports = function(app, passport) {
 
-
-
     //this route updates the user's document's answers from their initial health assessment
     app.post('/submit-quiz', isLoggedIn, function(req, res){
         // console.log(req.body);
@@ -74,12 +76,11 @@ module.exports = function(app, passport) {
 
     //this route renders the 'choose-habit' page
     app.get('/choose-habit', isLoggedIn, function (req, res) {
-        // let habits = ["Stress", "Water", "Sleep", "Nutriton", "Exercise"];
         res.render('choose-habit.ejs', {user : req.user, habits: HABIT_LIST});
 
     });
 
-    //this route updates the current user with the habit chosen on '/choose-habit'
+    //updates the current user with the habit chosen on '/choose-habit'
     app.post('/choose-habit', isLoggedIn, function (req, res) {
         // console.log(req.body);
         User.update(
@@ -96,18 +97,9 @@ module.exports = function(app, passport) {
         });
     });
 
-    app.get('/', function(req, res) {
-        Post.find().exec().then(results => {
-            console.log(results);
-            res.render('index.ejs', {posts: results});
 
-        }).catch(err => { 
-            throw err
-        });
-
-    });
-
-    //POST QUESTIONS
+    //Post Questions to the database
+    //ISSUE: modify so that this can only be modified by a site admin
     app.post('/questions', jsonParser, (req, res) => {
         console.log(req.body);
         const requiredFields = ['text', 'answers', 'answerType', 'name'];
@@ -136,15 +128,31 @@ module.exports = function(app, passport) {
             });
     });
 
+    //renders profile page
+    //ISSUE: are any messages needed in the User.update method?
+    //updates user's daysOnHabit
+    //if the user has skipped a day, the currentStreak should be reset 
     app.get('/profile', isLoggedIn, (req, res) => {
+
 
         let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
         console.log(req.user.habit.startDate);
         console.log(daysOnHabit);
 
+        
         Question.find()
         .then(results => {
-            res.render('profile.ejs', {user : req.user, questions: results, daysOnHabit: daysOnHabit});
+            let dailyHabit = req.user.habit.currentHabit;
+            let tip;
+            // console.log(req.user);
+            console.log(tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]);
+
+
+            if (dailyHabit){
+                tip = tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]
+            } 
+
+            res.render('profile.ejs', {user : req.user, questions: results, tip: tip, daysOnHabit: daysOnHabit});
 
 
         })
@@ -156,15 +164,22 @@ module.exports = function(app, passport) {
 
     });
 
+    //submits the user's YES/NO input for their current day habit tracking
+    //uses User.update() to update the users currentStreak to either increment it or reset it
+    //if the currentStreak exceeds the bestStreak, bestStreak will be updated
+    app.post('/current-day', isLoggedIn, (req, res) => {
+
+    });
+
 
 // END CUSTOMIZATION
 
 // normal routes ===============================================================
 
     // show the home page (will also have our login links)
-    // app.get('/', function(req, res) {
-    //     res.render('index.ejs');
-    // });
+    app.get('/', function(req, res) {
+        res.render('index.ejs');
+    });
 
     // PROFILE SECTION =========================
     // app.get('/profile', isLoggedIn, function(req, res) {

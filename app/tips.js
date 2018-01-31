@@ -16,4 +16,5 @@ let dailyTips = {
 		"get up from your desk every 45 minutes",
 		"park at the far side of the parking lot to get more steps"]};
 
+
 module.exports = dailyTips;
