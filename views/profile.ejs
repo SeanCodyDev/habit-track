@@ -57,8 +57,8 @@
             <ul>
                 <li>Current Habit: <%= user.habit.currentHabit %></li>
                 <li>Days on this Habit: <%= daysOnHabit %> </li>
-                <li>Current Streak: <%= user.habit.currentStreak %></li>
-                <li>Best Streak: <%= user.habit.bestStreak %></li>
+                <li>Current Streak: <span id="js-current-streak"><%= user.habit.currentStreak %></span></li>
+                <li>Best Streak: <span id="js-best-streak"><%= user.habit.bestStreak %></span></li>
             </ul>
         </div>
         <div class="col-sm-3 user-stats-graph">
@@ -75,15 +75,17 @@
 
     <div class="row current-day-box">
         <h2>Current Day</h2>
-        <form>
-            <fieldset>
-                <p>Ex. Have you drank at least 64 oz of water today?</p>
-                <input type="radio" name="daily-habit" value="true" /> Yes <br />
-                <input type="radio" name="daily-habit" value="false" /> No <br />
-            </fieldset>
-            <input type="submit" value="Submit">
-        </form>
-        <h3>(Insert random daily habit tip - relevant to habit here) <%= tip %></h3>
+        <% if (!dateCheck)  { %>
+            <form class='js-current-day'>
+                <fieldset>
+                    <p><%= habitQuestion %></p>
+                    <input type="radio" name="dailyHabit" value="true"/> Yes <br />
+                    <input type="radio" name="dailyHabit" value="false" /> No <br />
+                </fieldset>
+                <input type="submit" value="Submit">
+            </form>
+        <% } %>
+        <h3><%= tip %></h3>
     </div>
 
     <div class="row community-box">
@@ -195,4 +197,11 @@
 
 </div>
 </body>
+
+<script
+  src="http://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+
+  <script src="../javascripts/app.js"></script>
 </html>

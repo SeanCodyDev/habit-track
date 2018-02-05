@@ -1,3 +1,65 @@
+
+//listen for submit on current day
+$(document).ready(function(){
+$("form.js-current-day").submit(function(e) {
+	console.log($("form.js-current-day").serialize());
+
+
+
+
+
+    var url = "/current-day"; // the script where you handle the form input.
+
+    $.ajax({
+           type: "POST",
+           url: url,
+           data: $("form.js-current-day").serialize(), // serializes the form's elements.
+           success: function(data)
+           {
+              //jquery here to update DOM
+              console.log(data);
+              let currentStreakUpdate = data.habit.currentStreak;
+              let bestStreakUpdate = data.habit.bestStreak;
+              updateUserStats(currentStreakUpdate, bestStreakUpdate);
+              // console.log(currentStreakUpdate); // show response from the php script.
+
+           }
+         });
+
+    //hide the currentDay form
+    $('form.js-current-day').addClass('hidden');
+
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+});
+});
+
+function updateUserStats(currentUpdate, bestUpdate){
+  console.log("updateUserStats ran and currentUpdate is ", currentUpdate);
+  $('#js-current-streak').text(currentUpdate);
+  $('#js-best-streak').text(bestUpdate);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //this file is currently unused, but was what I pictured using for a client-side handling of the initial health assessment
 
 //----- HABIT ASSESSMENT -----
