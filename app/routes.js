@@ -7,9 +7,7 @@ const moment = require('moment');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 let tips = require('./tips');
-
-//daily tips test
-
+let testExport = require('./javascripts/progress');
 
 
 const HABIT_LIST = ["stress", "water", "sleep", "exercise", "nutrition"];
@@ -133,7 +131,7 @@ module.exports = function(app, passport) {
     //updates user's daysOnHabit
     //if the user has skipped a day, the currentStreak should be reset 
     app.get('/profile', isLoggedIn, (req, res) => {
-
+        testExport();
 
         let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
         console.log(req.user.habit.startDate);
