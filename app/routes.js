@@ -147,12 +147,12 @@ module.exports = function(app, passport) {
         //if the user has already updated their currentDay today, the user submit form is hidden
         //this is repeated in app.post('/current-day',...)
         let lastUpdated = req.user.habit.lastUpdated;
-        let today = moment().format('MMMM Do YYYY, h:mm:ss a');
+        let today = moment().format('MMMM Do YYYY');
         console.log(lastUpdated);
         console.log(today);
 
         //dateCheck is true if the currentDay has already been updated today
-        let dateCheck = moment(lastUpdated, 'MMMM Do YYYY, h:mm:ss a').isSame(today, 'day');
+        let dateCheck = lastUpdated == today;
         console.log("date check is", dateCheck);
 
         
@@ -205,36 +205,36 @@ module.exports = function(app, passport) {
         let dateCheck = moment(lastUpdated).isBefore(today, 'day');
 
         //update bestStreak if applicable
-        let bestStreakUpdate;
-        if (req.user.habit.bestStreak > req.user.habit.currentStreak) {
-            bestStreakUpdate = req.user.habit.bestStreak;
-        } else {
-            bestStreakUpdate = req.user.habit.currentStreak + 1;
-        };
+        //obsolete
+        // let bestStreakUpdate;
+        // if (req.user.habit.bestStreak > req.user.habit.currentStreak) {
+        //     bestStreakUpdate = req.user.habit.bestStreak;
+        // } else {
+        //     bestStreakUpdate = req.user.habit.currentStreak + 1;
+        // };
 
         // console.log(bestStreakUpdate);
 
-        if (req.body.dailyHabit == "true") {
-            let updatedTime = moment().format('MMMM Do YYYY, h:mm:ss a');
+        User.findOne({_id: req.user._id}, function (err, user) {
+            console.log(user)
+            user.habit.currentStreak++;
 
-            User.findAndModify(
-            {_id:req.user._id}, 
-            {$inc: 
-                { 
-                    "habit.currentStreak": 1
-                },
-            $set:
-                {
-                    "habit.bestStreak": bestStreakUpdate,
-                    "habit.lastUpdated": updatedTime
+            user.habit.bestStreak = Math.max(user.habit.bestStreak, user.habit.currentStreak);
+            user.habit.lastUpdated = moment().format('MMMM Do YYYY');
+            console.log(user);
+
+            user.save(function (err) {
+                if(err) {
+                    console.error('ERROR!');
                 }
-            }, function(result){ 
-                //return the currentStreak and bestStreak for updating the DOM
-                console.log(result);
+                res.json(user)
+            });
+        });
 
-                res.json('findAnd Modify test'); 
+        // if (req.body.dailyHabit == "true") {
+        //     let updatedTime = moment().format('MMMM Do YYYY, h:mm:ss a');
 
-            // User.update(
+            // User.findAndModify(
             // {_id:req.user._id}, 
             // {$inc: 
             //     { 
@@ -247,23 +247,44 @@ module.exports = function(app, passport) {
             //     }
             // }, function(result){ 
             //     //return the currentStreak and bestStreak for updating the DOM
-            //     res.json(req.user); 
-        });
+            //     console.log(result);
 
-        } else {
-            User.update(
-                {_id:req.user._id}, 
-                {$set: 
-                    { 
-                        "habit.currentStreak": 0,
-                        "habit.lastUpdated": updatedTime
+            //     res.json('findAnd Modify test'); 
 
-                    }
-                }, function(result){ 
-                    //return the currentStreak and bestStreak for updating the DOM
-                    res.json(req.user); 
-            });
-        }
+        //     User.update(
+        //     {_id:req.user._id}, 
+        //     {$inc: 
+        //         { 
+        //             "habit.currentStreak": 1
+        //         },
+        //     $set:
+        //         {
+        //             "habit.bestStreak": bestStreakUpdate,
+        //             "habit.lastUpdated": updatedTime
+        //         }
+        //     }, function(result){ 
+        //         //return the currentStreak and bestStreak for updating the DOM
+        //         console.log(result);
+        //         res.json(req.user); 
+        // });
+
+
+
+        // } else {
+        //     User.update(
+        //         {_id:req.user._id}, 
+        //         {$set: 
+        //             { 
+        //                 "habit.currentStreak": 0,
+        //                 "habit.lastUpdated": updatedTime
+
+        //             }
+        //         }, function(result){ 
+        //             //return the currentStreak and bestStreak for updating the DOM
+        //             console.log(result);
+        //             res.json(req.user); 
+        //     });
+        // }
     });
 
 
