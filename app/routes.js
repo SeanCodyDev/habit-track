@@ -7,7 +7,7 @@ const moment = require('moment');
 const bodyParser = require('body-parser');
 const jsonParser = bodyParser.json();
 let tips = require('./tips');
-let testExport = require('./javascripts/progress');
+// let testExport = require('./javascripts/progress');
 
 
 const HABIT_LIST = ["stress", "water", "sleep", "exercise", "nutrition"];
@@ -132,34 +132,41 @@ module.exports = function(app, passport) {
     //if the user has skipped a day, the currentStreak should be reset 
     app.get('/profile', isLoggedIn, (req, res) => {
         //testing export of function from progress.js
-        testExport();
+        // testExport();
 
         //get user's current habit and other users on that same habit to display in current news
 
-        let loggedInHabit;
-        User
-        .find({_id:req.user._id})
-        .then(results => {
-            loggedInHabit = results.habit.currentHabit;
-            console.log(loggedInHabit);
-        })
-        .catch(err => {
+        // let loggedInHabit;
+        var promise =
+            User
+            .findOne({_id:req.user._id})
+            .then(results => {
+                // loggedInHabit = results.habit.currentHabit;
+                // console.log(results);
+                return results;
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).json({ message: 'Internal server error'});
+            });
+
+
+        promise.then(function (doc) {
+            console.log(doc);
+            User
+            .find({"habit.currentHabit": doc.habit.currentHabit})
+            // .count()
+            .then(results => {
+               console.log(results);
+           })
+           .catch(err => {
             console.error(err);
             res.status(500).json({ message: 'Internal server error'});
         });
 
 
-        //getting error on unexpected "." token???
-        User
-        .find({"habit.currentHabit": loggedInHabit})
-        .count()
-        .then(results) => {
-             console.log(results);
-        }
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error'});
         });
+        
 
 
         let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
