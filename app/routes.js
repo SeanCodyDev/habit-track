@@ -131,13 +131,42 @@ module.exports = function(app, passport) {
     //updates user's daysOnHabit
     //if the user has skipped a day, the currentStreak should be reset 
     app.get('/profile', isLoggedIn, (req, res) => {
+        //testing export of function from progress.js
         testExport();
 
-        let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
-        console.log(req.user.habit.startDate);
-        console.log(daysOnHabit);
+        //get user's current habit and other users on that same habit to display in current news
 
-        
+        let loggedInHabit;
+        User
+        .find({_id:req.user._id})
+        .then(results => {
+            loggedInHabit = results.habit.currentHabit;
+            console.log(loggedInHabit);
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error'});
+        });
+
+
+        //getting error on unexpected "." token???
+        User
+        .find({"habit.currentHabit": loggedInHabit})
+        .count()
+        .then(results) => {
+             console.log(results);
+        }
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Internal server error'});
+        });
+
+
+        let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
+        // console.log(req.user.habit.startDate);
+        // console.log(daysOnHabit);
+
+        //find daily question and render
         Question.find()
         .then(results => {
             let dailyHabit = req.user.habit.currentHabit;
@@ -151,7 +180,6 @@ module.exports = function(app, passport) {
             } 
 
             res.render('profile.ejs', {user : req.user, questions: results, tip: tip, daysOnHabit: daysOnHabit});
-
 
         })
         .catch(err => {
