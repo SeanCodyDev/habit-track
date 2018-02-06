@@ -162,7 +162,7 @@ module.exports = function(app, passport) {
             let dailyHabit = req.user.habit.currentHabit;
             let tip;
             let habitQuestion;
-            console.log(req.user);
+            // console.log(req.user);
             // console.log(tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]);
             
             if (dailyHabit){
@@ -170,15 +170,13 @@ module.exports = function(app, passport) {
             } 
 
             //loop through HABIT_LIST to set the daily question
-            console.log(dailyHabit);
-            console.log(HABIT_LIST[0]["name"])
+            // console.log(dailyHabit);
             for (let i=0;i<HABIT_LIST.length;i++) {
                 if (dailyHabit == HABIT_LIST[i]["name"]) {
                     habitQuestion = HABIT_LIST[i]["question"];
                     break;
                 } else {
                     habitQuestion = "You still need to choose a habit";
-                    console.log("Error loading daily question");
                 }
             }
 
