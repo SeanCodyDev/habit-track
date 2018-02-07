@@ -135,38 +135,38 @@ module.exports = function(app, passport) {
         // testExport();
 
         //get user's current habit and other users on that same habit to display in current news
+        let currentHabitUsers;
 
-        // let loggedInHabit;
-        var promise =
+        let promise =
             User
-            .findOne({_id:req.user._id})
-            .then(results => {
+                .findOne({_id:req.user._id})
+                .then(results => {
                 // loggedInHabit = results.habit.currentHabit;
                 // console.log(results);
-                return results;
-            })
-            .catch(err => {
-                console.error(err);
-                res.status(500).json({ message: 'Internal server error'});
-            });
+                    return results;
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).json({ message: 'Internal server error'});
+                });
 
 
         promise.then(function (doc) {
-            console.log(doc);
             User
-            .find({"habit.currentHabit": doc.habit.currentHabit})
-            // .count()
-            .then(results => {
-               console.log(results);
-           })
-           .catch(err => {
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error'});
-        });
+                .find({"habit.currentHabit": doc.habit.currentHabit})
+                .count()
+                .then(results => {
+                   console.log(results);
+                   currentHabitUsers = results;
+                      
+               })
+               .catch(err => {
+                console.error(err);
+                res.status(500).json({ message: 'Internal server error'});
+                });
 
 
         });
-        
 
 
         let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
@@ -174,25 +174,26 @@ module.exports = function(app, passport) {
         // console.log(daysOnHabit);
 
         //find daily question and render
-        Question.find()
-        .then(results => {
-            let dailyHabit = req.user.habit.currentHabit;
-            let tip;
-            // console.log(req.user);
-            console.log(tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]);
+        Question
+            .find()
+            .then(results => {
+                let dailyHabit = req.user.habit.currentHabit;
+                let tip;
+                // console.log(req.user);
+                console.log(tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]);
 
 
-            if (dailyHabit){
-                tip = tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]
-            } 
+                if (dailyHabit){
+                    tip = tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]
+                } 
 
-            res.render('profile.ejs', {user : req.user, questions: results, tip: tip, daysOnHabit: daysOnHabit});
+                res.render('profile.ejs', {user : req.user, questions: results, tip: tip, daysOnHabit: daysOnHabit, currentHabitUsers: currentHabitUsers});
 
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).json({ message: 'Internal server error'});
-        });
+            })
+            .catch(err => {
+                console.error(err);
+                res.status(500).json({ message: 'Internal server error'});
+            });
 
 
     });
