@@ -42,8 +42,7 @@
         
         <form action="/choose-habit" method="post">
             <% for(var i=0; i < habits.length; i++) { %>
-                <p><b><%= habits[i] %>:</b></p>
-                <input type="radio" name="chooseHabit" value="<%= habits[i] %>" /> <%= habits[i] %><br />
+                <input type="radio" name="chooseHabit" value="<%= habits[i].name %>" /> <%= habits[i].name %><br />
 
             <% } %>
 

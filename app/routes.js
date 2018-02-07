@@ -10,12 +10,18 @@ let tips = require('./tips');
 // let testExport = require('./javascripts/progress');
 
 
-const HABIT_LIST = ["stress", "water", "sleep", "exercise", "nutrition"];
 
-// Set new moment thresholds
-  moment.relativeTimeThreshold('s', 1);
-  moment.relativeTimeThreshold('m', 1);
-  moment.relativeTimeThreshold('h', 0.001);
+const HABIT_LIST = [
+    {name: "stress",
+    question: "stress question"},
+    {name: "water",
+    question: "Did you drink at least 64oz of water today?"},
+    {name: "sleep",
+    question: "Did you get at least 6 hours of sleep last night?"},
+    {name: "exercise",
+    question: "Did you get in some non-exercise motion today?"},
+    {name: "nutrition",
+    question: "Did you eat 6 small meals today?"}];
 
 
 //choosehabit loops over the answers in req.body; if the question answered has a specific category, then that habit score is incremented.
@@ -27,12 +33,12 @@ function chooseHabit(data){
 
     for (let i=0; i<HABIT_LIST.length; i++){
         //initialize key values as numbers
-        habitScores[HABIT_LIST[i]] = 0;
+        habitScores[HABIT_LIST[i]["name"]] = 0;
 
         for (var key in data) {
-            if (key.includes(HABIT_LIST[i])){
+            if (key.includes(HABIT_LIST[i]["name"])){
 
-                habitScores[HABIT_LIST[i]] += parseInt(data[key]);
+                habitScores[HABIT_LIST[i]["name"]] += parseInt(data[key]);
 
             }     
         }
@@ -54,7 +60,9 @@ module.exports = function(app, passport) {
         let userUpdates =  {
                     "quiz.status":true,
                     "quiz.questions": req.body,
-                    "habit.startDate": moment().format("x")
+                    "habit.startDate": moment().format('x'),
+                    "habit.currentStreak": 0,
+                    "habit.bestStreak": 0
                 };
         console.log(userUpdates);
         //analyze and recommend habit (can this be written in a separate function?)
@@ -80,14 +88,16 @@ module.exports = function(app, passport) {
 
     //updates the current user with the habit chosen on '/choose-habit'
     app.post('/choose-habit', isLoggedIn, function (req, res) {
-        // console.log(req.body);
+        console.log(req.body)
+        console.log('Choosing Habit:')
+        console.log(req.body.chooseHabit);
         User.update(
             {_id:req.user._id}, 
             {$set: 
                 { 
                     "habit.currentHabit": req.body.chooseHabit,
                     //if the user selects the same habit they are currently on, this should not change
-                    "habit.startDate": moment()
+                    "habit.startDate": moment().format('MMMM Do YYYY, h:mm:ss a')
                 }
             }, function(result){ 
 
@@ -164,30 +174,65 @@ module.exports = function(app, passport) {
                 console.error(err);
                 res.status(500).json({ message: 'Internal server error'});
                 });
-
-
         });
 
+        //calculate how many days the user has been on the currentHabit
+        // let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
+        let daysOnHabit = Math.ceil((Date.now()-Number(req.user.habit.startDate))/86400000);
+        console.log('startdate', req.user.habit.startDate);
+        console.log('days on habit', daysOnHabit);
 
-        let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
-        // console.log(req.user.habit.startDate);
-        // console.log(daysOnHabit);
+        //if the user has already updated their currentDay today, the user submit form is hidden
+        //this is repeated in app.post('/current-day',...)
+        // let lastUpdated = req.user.habit.lastUpdated;
+        // let today = moment().format('MMMM Do YYYY');
+        // console.log(lastUpdated);
+        // console.log(today);
 
-        //find daily question and render
+        //dateCheck is true if the currentDay has already been updated today
+        let dateCheck;
+        if (req.user.habit.lastUpdated) {
+            console.log('lastUpdated:', req.user.habit.lastUpdated);
+            console.log('lastUpdated reformatted:', moment(req.user.habit.lastUpdated, "x").format('MMMM Do YYYY'));
+            dateCheck = moment(req.user.habit.lastUpdated, "x").format('MMMM Do YYYY') == moment().format('MMMM Do YYYY');
+        } else {
+            dateCheck = false;
+        };
+
+        console.log("date check is", dateCheck);
+
+        
         Question
             .find()
             .then(results => {
+            
                 let dailyHabit = req.user.habit.currentHabit;
                 let tip;
+                let habitQuestion;
                 // console.log(req.user);
-                console.log(tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]);
+                // console.log(tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]);
+                
+                if (dailyHabit){
+                    tip = tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]
+                } 
 
+                //loop through HABIT_LIST to set the daily question
+                // console.log(dailyHabit);
+                for (let i=0;i<HABIT_LIST.length;i++) {
+                    if (dailyHabit == HABIT_LIST[i]["name"]) {
+                        habitQuestion = HABIT_LIST[i]["question"];
+                        break;
+                    } else {
+                        habitQuestion = "You still need to choose a habit";
+                    }
+                }
 
                 if (dailyHabit){
                     tip = tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]
                 } 
 
-                res.render('profile.ejs', {user : req.user, questions: results, tip: tip, daysOnHabit: daysOnHabit, currentHabitUsers: currentHabitUsers});
+                res.render('profile.ejs', {user : req.user, questions: results, tip: tip, daysOnHabit: daysOnHabit, habitQuestion: habitQuestion, dateCheck: dateCheck, currentHabitUsers: currentHabitUsers});
+
 
             })
             .catch(err => {
@@ -198,12 +243,100 @@ module.exports = function(app, passport) {
 
     });
 
+
     //submits the user's YES/NO input for their current day habit tracking
     //uses User.update() to update the users currentStreak to either increment it or reset it
     //if the currentStreak exceeds the bestStreak, bestStreak will be updated
     app.post('/current-day', isLoggedIn, (req, res) => {
 
+        //if the user has already updated their currentDay today, the user submit form is hidden
+        let dateCheck = moment(req.user.habit.lastUpdated).format('MMMM Do YYYY') == moment().format('MMMM Do YYYY');
+        console.log("date check is", dateCheck);
+
+        //update bestStreak if applicable
+        //obsolete
+        // let bestStreakUpdate;
+        // if (req.user.habit.bestStreak > req.user.habit.currentStreak) {
+        //     bestStreakUpdate = req.user.habit.bestStreak;
+        // } else {
+        //     bestStreakUpdate = req.user.habit.currentStreak + 1;
+        // };
+
+        // console.log(bestStreakUpdate);
+
+        User
+            .findOne({_id: req.user._id}, function (err, user) {
+                console.log(user)
+                user.habit.currentStreak++;
+
+                user.habit.bestStreak = Math.max(user.habit.bestStreak, user.habit.currentStreak);
+                user.habit.lastUpdated = moment().format('x');
+                console.log(user);
+
+            user.save(function (err) {
+                if(err) {
+                    console.error('ERROR!');
+                }
+                res.json(user)
+            });
+        });
+
+        // if (req.body.dailyHabit == "true") {
+        //     let updatedTime = moment().format('MMMM Do YYYY, h:mm:ss a');
+
+            // User.findAndModify(
+            // {_id:req.user._id}, 
+            // {$inc: 
+            //     { 
+            //         "habit.currentStreak": 1
+            //     },
+            // $set:
+            //     {
+            //         "habit.bestStreak": bestStreakUpdate,
+            //         "habit.lastUpdated": updatedTime
+            //     }
+            // }, function(result){ 
+            //     //return the currentStreak and bestStreak for updating the DOM
+            //     console.log(result);
+
+            //     res.json('findAnd Modify test'); 
+
+        //     User.update(
+        //     {_id:req.user._id}, 
+        //     {$inc: 
+        //         { 
+        //             "habit.currentStreak": 1
+        //         },
+        //     $set:
+        //         {
+        //             "habit.bestStreak": bestStreakUpdate,
+        //             "habit.lastUpdated": updatedTime
+        //         }
+        //     }, function(result){ 
+        //         //return the currentStreak and bestStreak for updating the DOM
+        //         console.log(result);
+        //         res.json(req.user); 
+        // });
+
+
+
+        // } else {
+        //     User.update(
+        //         {_id:req.user._id}, 
+        //         {$set: 
+        //             { 
+        //                 "habit.currentStreak": 0,
+        //                 "habit.lastUpdated": updatedTime
+
+        //             }
+        //         }, function(result){ 
+        //             //return the currentStreak and bestStreak for updating the DOM
+        //             console.log(result);
+        //             res.json(req.user); 
+        //     });
+        // }
     });
+
 
 
 // END CUSTOMIZATION
