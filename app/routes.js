@@ -1,5 +1,4 @@
-//START CUSTOMIZATION
-
+//import required libraries and modules
 var Post       = require('../app/models/posts');
 var User       = require('../app/models/user');
 var Question   = require('../app/models/questions');
@@ -10,17 +9,17 @@ let tips = require('./tips');
 // let testExport = require('./javascripts/progress');
 
 
-
+//List of habits and daily questions
 const HABIT_LIST = [
-    {name: "stress",
-    question: "stress question"},
-    {name: "water",
+    {name: "Stress Management",
+    question: "Did you proactively choose a healthy stress response today (e.g. walking, deep breathing, writing)?"},
+    {name: "Hydration",
     question: "Did you drink at least 64oz of water today?"},
-    {name: "sleep",
+    {name: "Improve Sleep",
     question: "Did you get at least 6 hours of sleep last night?"},
-    {name: "exercise",
-    question: "Did you get in some non-exercise motion today?"},
-    {name: "nutrition",
+    {name: "Healthy Motion",
+    question: "Did you get in some non-exercise motion (e.g walking, yoga, light work) today, or did you exercise?"},
+    {name: "Fuel Properly (Nutrition)",
     question: "Did you eat 6 small meals today?"}];
 
 
@@ -86,7 +85,7 @@ module.exports = function(app, passport) {
 
     });
 
-    //updates the current user with the habit chosen on '/choose-habit'
+    //updates the current user with the habit chosen on '/choose-habit' and reset currentHabit stats
     app.post('/choose-habit', isLoggedIn, function (req, res) {
         console.log(req.body)
         console.log('Choosing Habit:')
@@ -97,7 +96,10 @@ module.exports = function(app, passport) {
                 { 
                     "habit.currentHabit": req.body.chooseHabit,
                     //if the user selects the same habit they are currently on, this should not change
-                    "habit.startDate": moment().format('MMMM Do YYYY, h:mm:ss a')
+                    "habit.startDate": moment().format('x'),
+                    "habit.lastUpdated": "",
+                    "habit.currentStreak": 0,
+                    "habit.bestStreak": 0
                 }
             }, function(result){ 
 
@@ -141,104 +143,74 @@ module.exports = function(app, passport) {
     //updates user's daysOnHabit
     //if the user has skipped a day, the currentStreak should be reset 
     app.get('/profile', isLoggedIn, (req, res) => {
-        //testing export of function from progress.js
-        // testExport();
 
-        //get user's current habit and other users on that same habit to display in current news
-        let currentHabitUsers;
+        User
+            .find({
+                "habit.currentHabit": req.user.habit.currentHabit
+            })
+            .count()
+            .then(count => {
+                console.log(count);
+                let currentHabitUsers = count;
+                Question
+                    .find()
+                    .then(results => {
 
-        let promise =
-            User
-                .findOne({_id:req.user._id})
-                .then(results => {
-                // loggedInHabit = results.habit.currentHabit;
-                // console.log(results);
-                    return results;
-                })
-                .catch(err => {
-                    console.error(err);
-                    res.status(500).json({ message: 'Internal server error'});
-                });
+                        let dailyHabit = req.user.habit.currentHabit;
+                        let tip;
+                        let habitQuestion;
+                        let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
+                        let dateCheck;
+                        if (req.user.habit.lastUpdated) {
+                            dateCheck = moment(req.user.habit.lastUpdated, "x").format('MMMM Do YYYY') == moment().format('MMMM Do YYYY');
+                        } else {
+                            dateCheck = false;
+                        };
+
+                        if (dailyHabit) {
+                            tip = tips[dailyHabit][Math.floor(Math.random() * tips[dailyHabit].length)]
+                        }
+                        for (let i = 0; i < HABIT_LIST.length; i++) {
+                            if (dailyHabit == HABIT_LIST[i]["name"]) {
+                                habitQuestion = HABIT_LIST[i]["question"];
+                                break;
+                            } else {
+                                habitQuestion = "You still need to choose a habit";
+                            }
+                        }
+
+                        if (dailyHabit) {
+                            tip = tips[dailyHabit][Math.floor(Math.random() * tips[dailyHabit].length)]
+                        }
+
+                        res.render('profile.ejs', {
+                            user: req.user,
+                            currentStreak: req.user.habit.currentStreak,
+                            questions: results,
+                            tip: tip,
+                            daysOnHabit: daysOnHabit,
+                            habitQuestion: habitQuestion,
+                            dateCheck: dateCheck,
+                            currentHabitUsers: currentHabitUsers
+                        });
 
 
-        promise.then(function (doc) {
-            User
-                .find({"habit.currentHabit": doc.habit.currentHabit})
-                .count()
-                .then(results => {
-                   console.log(results);
-                   currentHabitUsers = results;
-                      
-               })
-               .catch(err => {
-                console.error(err);
-                res.status(500).json({ message: 'Internal server error'});
-                });
-        });
-
-        //calculate how many days the user has been on the currentHabit
-        // let daysOnHabit = moment(req.user.habit.startDate, "x").fromNow(true);
-        let daysOnHabit = Math.ceil((Date.now()-Number(req.user.habit.startDate))/86400000);
-        console.log('startdate', req.user.habit.startDate);
-        console.log('days on habit', daysOnHabit);
-
-        //if the user has already updated their currentDay today, the user submit form is hidden
-        //this is repeated in app.post('/current-day',...)
-        // let lastUpdated = req.user.habit.lastUpdated;
-        // let today = moment().format('MMMM Do YYYY');
-        // console.log(lastUpdated);
-        // console.log(today);
-
-        //dateCheck is true if the currentDay has already been updated today
-        let dateCheck;
-        if (req.user.habit.lastUpdated) {
-            console.log('lastUpdated:', req.user.habit.lastUpdated);
-            console.log('lastUpdated reformatted:', moment(req.user.habit.lastUpdated, "x").format('MMMM Do YYYY'));
-            dateCheck = moment(req.user.habit.lastUpdated, "x").format('MMMM Do YYYY') == moment().format('MMMM Do YYYY');
-        } else {
-            dateCheck = false;
-        };
-
-        console.log("date check is", dateCheck);
-
-        
-        Question
-            .find()
-            .then(results => {
-            
-                let dailyHabit = req.user.habit.currentHabit;
-                let tip;
-                let habitQuestion;
-                // console.log(req.user);
-                // console.log(tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]);
-                
-                if (dailyHabit){
-                    tip = tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]
-                } 
-
-                //loop through HABIT_LIST to set the daily question
-                // console.log(dailyHabit);
-                for (let i=0;i<HABIT_LIST.length;i++) {
-                    if (dailyHabit == HABIT_LIST[i]["name"]) {
-                        habitQuestion = HABIT_LIST[i]["question"];
-                        break;
-                    } else {
-                        habitQuestion = "You still need to choose a habit";
-                    }
-                }
-
-                if (dailyHabit){
-                    tip = tips[dailyHabit][Math.floor(Math.random()*tips[dailyHabit].length)]
-                } 
-
-                res.render('profile.ejs', {user : req.user, questions: results, tip: tip, daysOnHabit: daysOnHabit, habitQuestion: habitQuestion, dateCheck: dateCheck, currentHabitUsers: currentHabitUsers});
-
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        res.status(500).json({
+                            message: 'Internal server error'
+                        });
+                    });
 
             })
             .catch(err => {
                 console.error(err);
-                res.status(500).json({ message: 'Internal server error'});
+                res.status(500).json({
+                    message: 'Internal server error'
+                });
             });
+
 
 
     });

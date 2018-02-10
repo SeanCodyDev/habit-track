@@ -13,12 +13,6 @@ const questionSchema = mongoose.Schema({
 	category: String
 });
 
-// var question = {
-// 	text: "What is your name?",
-// 	answers: ['Sean', 'Niko'],
-// 	answerType: "radio",
-// 	name: "Question 1"
-// };
 
 // create the model for questions and expose it to our app
 module.exports = mongoose.model('Question', questionSchema);

@@ -1,8 +1,12 @@
 
 
 //start by modifying how percent is calculated
-var percent = 55;
+console.log(currentStreak);
 
+var percent = Math.min((currentStreak/30)*100, 100);
+
+setTimeout(function(){percent = 50; setTimeout(animate,0);
+}, 5000);
 
 var pie=d3.layout.pie()
 .value(function(d){return d})
@@ -146,8 +150,3 @@ var arc=d3.svg.arc()
 
     setTimeout(animate,0);
 
-function testExport(){
-    console.log("textExport is working");
-}
-
-module.exports = testExport();
