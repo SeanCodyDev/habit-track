@@ -2,10 +2,18 @@
 	box-sizing: border-box;
 }
 
-.assessment-box, .user-stats-box, .current-day-box, .user-stats-image, .user-stats-details, .user-stats-graph, .community-box {
+.user-stats-box, .current-day-box, .user-stats-image, .user-stats-details, .user-stats-graph, .community-box {
 	border: 5px solid black;
 }
 
 .hidden{
 	display: none;
+}
+
+.marketing {
+	text-align: center;
+}
+
+label {
+	padding-left: 5px;
 }

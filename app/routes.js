@@ -307,8 +307,29 @@ module.exports = function(app, passport) {
         //             res.json(req.user); 
         //     });
         // }
+
+
+
     });
 
+        // TESTIMONIALS =================================
+        // show the testimonials page
+        app.get('/testimonials', isLoggedIn, function(req, res) {
+            console.log(req.user);
+            res.render('testimonials.ejs', {user: req.user});
+        });
+
+        // SCIENCE =================================
+        // show the science page
+        app.get('/science', isLoggedIn, function(req, res) {
+            res.render('science.ejs', {user: req.user});
+        });
+
+        // HOW-IT-WORKS =================================
+        // show the how-it-works page
+        app.get('/how-it-works', isLoggedIn, function(req, res) {
+            res.render('how-it-works.ejs', {user: req.user});
+        });
 
 
 // END CUSTOMIZATION
@@ -317,7 +338,7 @@ module.exports = function(app, passport) {
 
     // show the home page (will also have our login links)
     app.get('/', function(req, res) {
-        res.render('index.ejs');
+        res.render('index.ejs', {user: req.user});
     });
 
     // PROFILE SECTION =========================
@@ -341,7 +362,7 @@ module.exports = function(app, passport) {
         // LOGIN ===============================
         // show the login form
         app.get('/login', function(req, res) {
-            res.render('login.ejs', { message: req.flash('loginMessage') });
+            res.render('login.ejs', { message: req.flash('loginMessage'), user: req.user });
         });
 
         // process the login form

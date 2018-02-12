@@ -21,7 +21,10 @@ $("form.js-current-day").submit(function(e) {
               let currentStreakUpdate = data.habit.currentStreak;
               let bestStreakUpdate = data.habit.bestStreak;
               updateUserStats(currentStreakUpdate, bestStreakUpdate);
-              // console.log(currentStreakUpdate); // show response from the php script.
+              updateCurrentDay(currentStreakUpdate, bestStreakUpdate);
+              percent = Math.min((currentStreakUpdate/30)*100, 100);
+              console.log("percent is", percent);
+              test(percent);
 
            }
          });
@@ -31,7 +34,17 @@ $("form.js-current-day").submit(function(e) {
 
     e.preventDefault(); // avoid to execute the actual submit of the form.
 });
+
+$('#js-account-button').on('click', function(e) {
+  e.preventDefault();
+  toggleAccountDetals();
 });
+
+});
+
+
+
+
 
 function updateUserStats(currentUpdate, bestUpdate){
   console.log("updateUserStats ran and currentUpdate is ", currentUpdate);
@@ -39,6 +52,25 @@ function updateUserStats(currentUpdate, bestUpdate){
   $('#js-best-streak').text(bestUpdate);
 
 }
+
+//hide or reveal account info
+function toggleAccountDetals(){
+  $('.js-account-details').toggleClass('hidden');
+}
+
+//update currentDay - congratulate on new best streak or for 30 days
+function updateCurrentDay(currentUpdate, bestUpdate){
+  let message;
+  if (currentUpdate == bestUpdate) {
+    message = 'Congratulatons on a new Best Streak!';
+  } else if (currentUpdate >= 30) {
+    message = 'Congratulations on reaching a 30 day habit streak!';
+  }
+
+  console.log('updateCurrentDay ran');
+  $('#js-current-message').text(message);
+}
+
 
 
 

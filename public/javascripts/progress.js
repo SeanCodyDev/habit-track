@@ -5,8 +5,13 @@ console.log(currentStreak);
 
 var percent = Math.min((currentStreak/30)*100, 100);
 
-setTimeout(function(){percent = 50; setTimeout(animate,0);
-}, 5000);
+function test(param){
+    console.log(param);
+    percent = param;
+    setTimeout(animate,0);
+}
+
+setTimeout(animate,0);
 
 var pie=d3.layout.pie()
 .value(function(d){return d})

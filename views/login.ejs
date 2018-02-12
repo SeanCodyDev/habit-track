@@ -4,16 +4,18 @@
     <title>Node Authentication</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <style>
-        body         { padding-top:80px; }
-    </style>
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+
 </head>
 <body>
+
+    <% include includes/navbar.ejs %>
+
 <div class="container">
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
 
-            <h1><span class="fa fa-sign-in"></span> Login</h1>
+            <h1><span class="fa fa-sign-in-alt"></span> Login</h1>
 
             <% if (message.length > 0) { %>
                 <div class="alert alert-danger">
@@ -33,9 +35,9 @@
                         </div>
 
                         <button type="submit" class="btn btn-warning btn-lg btn-block">Login</button>
-                        <a href="/auth/facebook" class="btn btn-lg btn-block btn-primary"><span class="fa fa-facebook"></span> Facebook</a>
-                        <a href="/auth/twitter" class="btn btn-lg btn-block btn-info"><span class="fa fa-twitter"></span> Twitter</a>
-                        <a href="/auth/google" class="btn btn-lg btn-block btn-danger"><span class="fa fa-google-plus"></span> Google+</a>
+                        <a href="/auth/facebook" class="btn btn-lg btn-block btn-primary"><span class="fab fa-facebook"></span> Facebook</a>
+                        <a href="/auth/twitter" class="btn btn-lg btn-block btn-info"><span class="fab fa-twitter"></span> Twitter</a>
+                        <a href="/auth/google" class="btn btn-lg btn-block btn-danger"><span class="fab fa-google-plus"></span> Google+</a>
                     </form>
 
 
