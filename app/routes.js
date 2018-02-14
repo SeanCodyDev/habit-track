@@ -314,20 +314,20 @@ module.exports = function(app, passport) {
 
         // TESTIMONIALS =================================
         // show the testimonials page
-        app.get('/testimonials', isLoggedIn, function(req, res) {
+        app.get('/testimonials', function(req, res) {
             console.log(req.user);
             res.render('testimonials.ejs', {user: req.user});
         });
 
         // SCIENCE =================================
         // show the science page
-        app.get('/science', isLoggedIn, function(req, res) {
+        app.get('/science', function(req, res) {
             res.render('science.ejs', {user: req.user});
         });
 
         // HOW-IT-WORKS =================================
         // show the how-it-works page
-        app.get('/how-it-works', isLoggedIn, function(req, res) {
+        app.get('/how-it-works', function(req, res) {
             res.render('how-it-works.ejs', {user: req.user});
         });
 

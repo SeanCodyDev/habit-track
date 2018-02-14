@@ -1,5 +1,21 @@
-*{
+/*font-family: 'Space Mono', monospace;
+font-family: 'Concert One', cursive;
+font-family: 'Tillana', cursive;
+font-family: 'Alike Angular', serif;*/
+
+/* MOBILE - DEFAULT STYLING =====*/
+
+body * {
 	box-sizing: border-box;
+	font-family: 'Alike Angular', serif;
+}
+
+body {
+	/*background-image: url("https://images.unsplash.com/photo-1422004694183-cd2f8c55d4d9?ixlib=rb-0.3.5&s=1f5bb5fa97ee0fa3fea850ece850b184&auto=format&fit=crop&w=1953&q=80");*/
+   	background-image: url("/images/david-marcu-6357.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
 }
 
 .user-stats-box, .current-day-box, .user-stats-image, .user-stats-details, .user-stats-graph, .community-box {
@@ -14,6 +30,102 @@
 	text-align: center;
 }
 
+.footer-container{
+	background-color: #eee;
+}
+
+h1{
+	font-family: 'Concert One', cursive;
+}
+
+h2{
+	font-family: 'Tillana', cursive;
+	font-size: 36px;
+}
+
+.jumbotron>p{
+	margin-top: 16px;
+}
+
+.get-started>h2 {
+	margin-bottom: 20px;
+}
+
 label {
 	padding-left: 5px;
+}
+
+.navbar-title {
+	position: absolute;
+	top: 10px;
+	font-family: 'Space Mono', monospace;
+	font-weight: bold;
+}
+
+.main-features {
+	border-bottom: 2px solid gray;
+}
+
+.get-started {
+	/*padding-top: 10px;*/
+    padding-bottom: 15px;
+    margin-top: 10px;
+    background-color: #eee;
+    border-radius: 5px;
+}
+
+.get-started>h3{
+	margin-bottom: 15px;
+}
+
+.login-box, .signup-box{
+	background-color: #eee;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.get-started .btn{
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+/* CUSTOM STYLES TO BOOTSTRAP DEFAULT CLASSES */
+/* (things could break here!) */
+
+h3{
+	font-size: 30px;
+}
+
+.login-box .btn-lg, .signup-box .btn-lg{
+	margin-bottom: 10px;
+}
+
+.row p {
+	font-size: 16px;
+}
+
+.navbar-brand{
+	font-size: 40px;
+}
+
+footer{
+	margin-top: 20px;
+	padding-top: 12px;
+}
+
+/* DESKTOP =======*/
+
+@media (min-width: 768px) {}
+
+.navbar-nav>li>a {
+    margin-top: 10px;
+    font-size: 18px;
+
+}
+
+
+.navbar-nav>li>.btn {
+    margin-right: 5px;
+}
+
 }
