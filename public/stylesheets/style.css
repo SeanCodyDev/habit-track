@@ -18,8 +18,39 @@ body {
     background-attachment: fixed;
 }
 
-.user-stats-box, .current-day-box, .user-stats-image, .user-stats-details, .user-stats-graph, .community-box {
+.page-header {
+	border-bottom: none;
+    margin: 0;}
+
+/*.user-stats-box, .current-day-box, .user-stats-image, .user-stats-details, .user-stats-graph, .community-box {
 	border: 5px solid black;
+}*/
+
+.user-stats-box {
+	border-bottom: 2px solid gray;
+	padding-bottom: 16px;
+	border-top: 2px solid gray;
+    padding-top: 16px;
+}
+
+.current-day-box{
+	border:;
+}
+
+.user-stats-community{
+	border-right: 2px solid gray;
+}
+
+.user-stats-details{
+	border-bottom: 2px solid gray;
+}
+
+.user-stats-graph{
+	top: -50px;
+}
+
+.community-box{
+	border:;
 }
 
 .hidden{
@@ -41,6 +72,22 @@ h1{
 h2{
 	font-family: 'Tillana', cursive;
 	font-size: 36px;
+}
+
+.user-stats-details h3 {
+	margin-top: 5px;
+}
+
+.user-stats-details li, .community-box li {
+	font-size: 18px;
+}
+
+.current-day-box .btn, .habit-assessment .btn {
+	margin-top: 10px;
+}
+
+.current-day-box form{
+	margin-left: 16px;
 }
 
 .jumbotron>p{
@@ -89,6 +136,34 @@ label {
 	margin-right: 5px;
 }
 
+.assessment-instructions {
+	background-color: #eee;
+	border-radius: 5px;
+
+}
+
+.assessment-instructions p {
+	padding-bottom: 10px;
+
+}
+
+.assessment-instructions h4 {
+	font-weight: bold;
+	font-size: 24px;
+    padding-bottom: 5px;
+    padding-top: 10px;
+}
+
+.habit-assessment .form-check {
+	padding-left: 10px;
+}
+
+.habit-assessment p {
+	margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid gray;
+}
+
 /* CUSTOM STYLES TO BOOTSTRAP DEFAULT CLASSES */
 /* (things could break here!) */
 
@@ -115,7 +190,7 @@ footer{
 
 /* DESKTOP =======*/
 
-@media (min-width: 768px) {}
+@media (min-width: 768px) {
 
 .navbar-nav>li>a {
     margin-top: 10px;

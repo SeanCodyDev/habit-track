@@ -236,6 +236,8 @@ module.exports = function(app, passport) {
 
         // console.log(bestStreakUpdate);
 
+
+
         User
             .findOne({_id: req.user._id}, function (err, user) {
                 console.log(user)

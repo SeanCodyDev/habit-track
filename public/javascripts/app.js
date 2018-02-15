@@ -23,8 +23,6 @@ $("form.js-current-day").submit(function(e) {
               updateUserStats(currentStreakUpdate, bestStreakUpdate);
               updateCurrentDay(currentStreakUpdate, bestStreakUpdate);
               percent = Math.min((currentStreakUpdate/30)*100, 100);
-              console.log("percent is", percent);
-              test(percent);
 
            }
          });

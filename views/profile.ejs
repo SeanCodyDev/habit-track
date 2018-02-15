@@ -17,8 +17,9 @@
 
     <div class="page-header text-center">
         <h1><span class="fa fa-user"></span> Profile Page</h1>
-        <a href="/logout" class="btn btn-default btn-lg">Logout</a>
+        <% if (user.quiz.status) { %>
         <a href="/choose-habit" class="btn btn-default btn-lg">Choose Habit</a>
+        <% } %>
         <input class="btn btn-default btn-lg" id="js-account-button" type="submit" value="Account">
     </div>
 
@@ -113,9 +114,11 @@
 <div class="row">
     <div class="col-md-12 assessment-box">
         <% if (!user.quiz.status) { %>
+            <div class="assessment-instructions text-center">
+                <h4>Welcome to Habit Track!</h4><p>To get started, please complete this Habit Assessment for recommendations on a Habit to begin working on.</p>
+            </div>
             <h2>Habit Assessment</h2>
-                <p>Welcome to Habit Track! To get started, please complete this Habit Assessment for recommendations on a Habit to begin working on.</p>
-                <form action="/submit-quiz" method="post">
+                <form action="/submit-quiz" method="post" class="habit-assessment">
                     <% for(var i=0; i < questions.length; i++) { %>
                         <p><b><%= questions[i].text %>:</b></p>
                             <% for(var j=0; j < questions[i].answers.length; j++) { %>
@@ -138,34 +141,21 @@
 
 <% if (user.quiz.status) { %>
     <div class="row user-stats-box">
-        <div class="col-md-12">
+<!--         <div class="col-md-12">
             <h2>Your Stats</h2>
-        </div>
-        <div class="col-sm-3 user-stats-image">
-            <h3>user avatar</h3>
-        </div>
-        <div class="col-sm-6 user-stats-details">
-            <h3>user stats details</h3>
-            <ul>
-                <li>Current Habit: <%= user.habit.currentHabit %></li>
-                <li>Days on this Habit: <%= daysOnHabit %> </li>
-                <li>Current Streak: <span id="js-current-streak"><%= user.habit.currentStreak %></span></li>
-                <li>Best Streak: <span id="js-best-streak"><%= user.habit.bestStreak %></span></li>
-            </ul>
-        </div>
-        <div class="col-sm-3 user-stats-graph">
-            <h3>stats graph</h3>
-            <% include includes/progress.ejs %>
-            <ul>
-                <li>% progress toward 30 day goal</li>
-            </ul>
-        </div>
-    </div>
+        </div> -->
 
-
-
-    <div class="row current-day-box">
-        <div class="col-md-12">
+        <div class="col-sm-8 user-stats-community">
+            <div class="user-stats-details">
+                <h2>Your Progress</h2>
+                <ul>
+                    <li>Current Habit: <%= user.habit.currentHabit %></li>
+                    <li>Days on this Habit: <%= daysOnHabit %> </li>
+                    <li>Current Streak: <span id="js-current-streak"><%= user.habit.currentStreak %></span></li>
+                    <li>Best Streak: <span id="js-best-streak"><%= user.habit.bestStreak %></span></li>
+                </ul>
+            </div>
+            <div class="current-day-box">
             <h2>Current Day</h2>
             <% if (!dateCheck)  { %>
                 <form class='js-current-day'>
@@ -179,22 +169,27 @@
                             <input class="form-check-input" type="radio" name="dailyHabit"   value="false">
                             <label class="form-check-label" for="dailyHabit">No</label>
                         </div>
-<!--                         <input type="radio" name="dailyHabit" value="true"/> Yes <br />
-                        <input type="radio" name="dailyHabit" value="false" /> No <br /> -->
                     </fieldset>
                     <input class="btn btn-lg btn-primary" type="submit" value="Submit">
                 </form>
             <% } %>
-            <h3><%= tip %></h3>
+            <h3>Daily Habit Tip</h3>
+            <p><%= tip %></p>
             <h3 id="js-current-message"></h3>
         </div>
+        </div>
+
+        <div class="col-sm-4 user-stats-graph">
+            <% include includes/progress.ejs %>
+        </div>
     </div>
+
 
     <div class="row community-box">
         <div class="col-md-12">
             <h2>Community News</h2>
-            <h3>There are <%= currentHabitUsers %> other people working on <%= user.habit.currentHabit %>!</h3>
             <ul>
+                <li>There are <%= currentHabitUsers %> other people working on <%= user.habit.currentHabit %>!</li>
                 <li>Ex. "Jane D. just finished 30 days working on water!"</li>
                 <li>Ex. "John D just started working on stress!"</li>
             </ul>
@@ -206,11 +201,12 @@
 
 
 
-    <% include includes/footer.ejs %>
+
     
 
 
 </div>
+    <% include includes/footer.ejs %>
 </body>
 
 <!-- jQuery and Bootstrap Scripts -->
