@@ -59,7 +59,9 @@ function toggleAccountDetals(){
 //update currentDay - congratulate on new best streak or for 30 days
 function updateCurrentDay(currentUpdate, bestUpdate){
   let message;
-  if (currentUpdate == bestUpdate) {
+  if (currentUpdate == 0) {
+    message = 'Try again tomorrow!';
+  } else if (currentUpdate == bestUpdate) {
     message = 'Congratulatons on a new Best Streak!';
   } else if (currentUpdate >= 30) {
     message = 'Congratulations on reaching a 30 day habit streak!';

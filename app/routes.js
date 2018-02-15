@@ -225,23 +225,15 @@ module.exports = function(app, passport) {
         let dateCheck = moment(req.user.habit.lastUpdated).format('MMMM Do YYYY') == moment().format('MMMM Do YYYY');
         console.log("date check is", dateCheck);
 
-        //update bestStreak if applicable
-        //obsolete
-        // let bestStreakUpdate;
-        // if (req.user.habit.bestStreak > req.user.habit.currentStreak) {
-        //     bestStreakUpdate = req.user.habit.bestStreak;
-        // } else {
-        //     bestStreakUpdate = req.user.habit.currentStreak + 1;
-        // };
-
-        // console.log(bestStreakUpdate);
-
-
 
         User
             .findOne({_id: req.user._id}, function (err, user) {
                 console.log(user)
-                user.habit.currentStreak++;
+                if (req.body.dailyHabit == "true") {
+                    user.habit.currentStreak++;
+                } else {
+                    user.habit.currentStreak = 0;
+                }  
 
                 user.habit.bestStreak = Math.max(user.habit.bestStreak, user.habit.currentStreak);
                 user.habit.lastUpdated = moment().format('x');
