@@ -29,6 +29,7 @@ const HABIT_LIST = [
 function chooseHabit(data){
     let highScorehabit;
     let habitScores = {};
+    console.log('chooseHabit data', data);
 
     for (let i=0; i<HABIT_LIST.length; i++){
         //initialize key values as numbers
@@ -63,7 +64,7 @@ module.exports = function(app, passport) {
                     "habit.currentStreak": 0,
                     "habit.bestStreak": 0
                 };
-        console.log(userUpdates);
+        // console.log(userUpdates);
         //analyze and recommend habit (can this be written in a separate function?)
         userUpdates["habit.currentHabit"] = chooseHabit(req.body);
         User.update(

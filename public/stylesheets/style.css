@@ -5,10 +5,13 @@ font-family: 'Alike Angular', serif;*/
 
 /* MOBILE - DEFAULT STYLING =====*/
 
-body * {
+* {
 	box-sizing: border-box;
-	font-family: 'Alike Angular', serif;
+	font-family: 'Roboto';
+	color: #333;
 }
+
+
 
 body {
 	/*background-image: url("https://images.unsplash.com/photo-1422004694183-cd2f8c55d4d9?ixlib=rb-0.3.5&s=1f5bb5fa97ee0fa3fea850ece850b184&auto=format&fit=crop&w=1953&q=80");*/
@@ -16,6 +19,16 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     background-attachment: fixed;
+    position: relative;
+    min-height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.row {
+	margin:0;
+	/*width: 100%;*/
 }
 
 .page-header {
@@ -26,27 +39,58 @@ body {
 	border: 5px solid black;
 }*/
 
+.card {
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+	background-color: white;
+	padding: 32px;
+	text-align: center;
+	margin: 36px 12px 36px 12px;
+	border-radius: 5px
+	/*min-height: 420px;*/
+}
+
+.card h1 {
+	font-size: 60px;
+	
+}
+
+.card li {
+	text-align: left;
+}
+
+.navbar-nav>li>a {
+    margin-top: 10px;
+    font-size: 18px;
+
+}
+
+.daily-habit-tip {
+	
+}
+
 .user-stats-box {
-	border-bottom: 2px solid gray;
-	padding-bottom: 16px;
-	border-top: 2px solid gray;
-    padding-top: 16px;
+	/*border-bottom: 2px solid gray;*/
+	/*padding-bottom: 16px;*/
+	/*border-top: 2px solid gray;*/
+    /*padding-top: 16px;*/
 }
 
 .current-day-box{
-	border:;
 }
 
 .user-stats-community{
-	border-right: 2px solid gray;
+	/*border-right: 2px solid gray;*/
 }
 
-.user-stats-details{
-	border-bottom: 2px solid gray;
+.user-stats-details, .current-day-box{
+
+}
+
+.user-stats-details ul, .current-day-box form {
+	text-align: left;
 }
 
 .user-stats-graph{
-	top: -50px;
 }
 
 .community-box{
@@ -63,6 +107,12 @@ body {
 
 .footer-container{
 	background-color: #eee;
+    bottom: 0;
+    width: 100%;
+}
+
+.container {
+	min-height: 100vh;
 }
 
 h1{
@@ -70,8 +120,12 @@ h1{
 }
 
 h2{
-	font-family: 'Tillana', cursive;
+	font-family: 'Roboto';
 	font-size: 36px;
+}
+
+h3 span{
+	padding-left: 15px;
 }
 
 .user-stats-details h3 {
@@ -96,6 +150,8 @@ h2{
 
 .get-started>h2 {
 	margin-bottom: 20px;
+	padding-top: 20px;
+    margin-top: 0;
 }
 
 label {
@@ -109,16 +165,17 @@ label {
 	font-weight: bold;
 }
 
+#testimonials {
+	border-right: 1px solid #777;
+}
+
 .main-features {
 	border-bottom: 2px solid gray;
 }
 
-.get-started {
-	/*padding-top: 10px;*/
-    padding-bottom: 15px;
-    margin-top: 10px;
-    background-color: #eee;
-    border-radius: 5px;
+
+.get-started-box {
+	padding-bottom: 100px;
 }
 
 .get-started>h3{
@@ -131,9 +188,8 @@ label {
     padding: 20px;
 }
 
-.get-started .btn{
-	margin-left: 5px;
-	margin-right: 5px;
+.card .btn{
+	margin: 10px;
 }
 
 .assessment-instructions {
@@ -154,6 +210,18 @@ label {
     padding-top: 10px;
 }
 
+.habit-assessment * {
+	text-align: left;
+}
+
+.habit-assessment h2 {
+	margin-bottom: 30px;
+}
+
+.habit-assessment p:first-child {
+	border: none;
+}
+
 .habit-assessment .form-check {
 	padding-left: 10px;
 }
@@ -162,6 +230,10 @@ label {
 	margin-top: 10px;
     padding-top: 10px;
     border-top: 2px solid gray;
+}
+
+.choose-habit {
+	text-align: left;
 }
 
 /* CUSTOM STYLES TO BOOTSTRAP DEFAULT CLASSES */
@@ -180,21 +252,44 @@ h3{
 }
 
 .navbar-brand{
-	font-size: 40px;
+	font-size: 4vw;
 }
-
-footer{
-	margin-top: 20px;
-	padding-top: 12px;
-}
-
-/* DESKTOP =======*/
-
-@media (min-width: 768px) {
 
 .navbar-nav>li>a {
     margin-top: 10px;
-    font-size: 18px;
+    font-size: 1.6vw;
+
+}
+
+footer{
+	padding: 20px;
+}
+
+text {
+	display: block;
+}
+
+.info-card p, .info-card li {
+	text-align: left;
+}
+
+.col-sm-6 {
+    width: 100%;
+    float: none;
+}
+
+
+/* DESKTOP =======*/
+
+@media (min-width: 992px) {
+
+.navbar-brand{
+	font-size: 40px;
+}
+
+
+.navbar-nav>li>a:hover {
+    text-decoration: underline;
 
 }
 
@@ -202,5 +297,13 @@ footer{
 .navbar-nav>li>.btn {
     margin-right: 5px;
 }
+
+
+.col-sm-6 {
+    width: 50%;
+    float: left;
+}
+
+
 
 }

@@ -16,15 +16,15 @@
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="/science">The Science</a></li>
-        <li><a href="/how-it-works">How It Works</a></li>
-        <li><a href="/testimonials">Testimonials</a></li>
+        <li><a href="/science"><text>The Science</text></a></li>
+        <li><a href="/how-it-works"><text>How It Works</text></a></li>
+        <li><a href="/testimonials" id="testimonials"><text>Testimonials</text></a></li>
             <% if (typeof user == "undefined") { %>
-        <li><a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Login</a></li>
-        <li><a href="/signup" class="btn btn-default"><span class="fa fa-user"></span> Signup</a></li>
+        <li><a href="/login"><text>Login</text></a></li>
+        <li><a href="/signup"><text>Signup</text></a></li>
             <% } else { %>
-        <li><a href="/logout" class="btn btn-default"><span class="fa fa-user"></span> Logout</a></li>
-        <li><a href="/profile" class="btn btn-default"><span class="fa fa-user"></span> Profile</a></li>
+        <li><a href="/logout"><text>Logout</text></a></li>
+        <li><a href="/profile"><text>Profile</text></a></li>
         <% } %>      
       </ul>
     </div><!-- /.navbar-collapse -->

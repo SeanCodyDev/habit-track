@@ -4,60 +4,43 @@
     <title>Habit Track</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Alike+Angular|Concert+One|Space+Mono:400,700|Tillana|Roboto" rel="stylesheet">
+    <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
     <link rel="stylesheet" type="text/css" href='../stylesheets/style.css'>
-    <link href="https://fonts.googleapis.com/css?family=Alike+Angular|Concert+One|Space+Mono:400,700|Tillana" rel="stylesheet">
-    <style>
-        body         { padding-top:80px; word-wrap:break-word; }
-    </style>
+
 </head>
 <body>
+
+    <% include includes/navbar.ejs %>
+
 <div class="container">
-
-    <div class="page-header text-center">
-        <h1><span class="fa fa-anchor"></span> Profile Page</h1>
-        <a href="/logout" class="btn btn-default btn-sm">Logout</a>
-        <a href="/profile" class="btn btn-default btn-sm">Profile</a>
-    </div>
-
     <div class="row">
-
-<!-- This quiz-box section will be visible only if the user has not yet taken the quiz. The page will load with a prompt to start the quiz, and the quiz questions and results will be dynamically loaded -->
-        <div class="col-sm-12 assessment-box">
-            <h2>Choose Habit Page</h2>
+        <div class="card col-sm-12 choose-habit">
+            <h2>Choose Habit</h2>
+            <p>Your Current habit is <strong><%= user.habit.currentHabit %></strong>. If you've just completed the Assessment, this recommendation is based on your answers.</p>
+            <form action="/choose-habit" method="post">
+                <% for(var i=0; i < habits.length; i++) { %>
+                    <input type="radio" name="chooseHabit" value="<%= habits[i].name %>" /> <%= habits[i].name %><br />
+                <% } %>
+                <input type="submit" value="Submit" class="btn btn-lg btn-primary">
+            </form>
         </div>
     </div>
-
-    <div class="row">
-
-    <div class="row">
-
-        <div class="col-sm-12 assessment-box">
-            <p>Your Current habit is <%= user.habit.currentHabit %>. If you've just completed the Assessment, this recommendation is based on your answers.</p>
-        </div>
-    </div>
-
-    <div class="row">        <!-- These buttons are used to update the user.habit.currentHabit key -->
-        <!-- It will use a PUT method to '/habit-update'... need to look into req.body to find where the specific habit text will be available -->
-        <!-- These habit options are currently hardcoded... but they ought to be rendered with a function in 'routes.js' when GET '/choose-habits' is requested, using an array of habit options -->
-        
-        <form action="/choose-habit" method="post">
-            <% for(var i=0; i < habits.length; i++) { %>
-                <input type="radio" name="chooseHabit" value="<%= habits[i].name %>" /> <%= habits[i].name %><br />
-
-            <% } %>
-
-            <input type="submit" value="Submit">
-        </form>
-    </div>
-    <div class="text-center">
-        <p>A demo by <a href="http://scotch.io">Scotch</a>.</p>
-        <p>Visit the <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-setup-and-local">tutorial</a>.</p>
-    </div>
-
-<!--     <% include includes/footer.ejs %>
- -->    
-
-
 </div>
+
+<% include includes/footer.ejs %>
+
 </body>
+
+<!-- jQuery and Bootstrap Scripts -->
+    <script
+      src="http://code.jquery.com/jquery-3.3.1.js"
+      integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+      crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+
+    <script src="../javascripts/app.js"></script>
+
 </html>

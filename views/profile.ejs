@@ -4,9 +4,9 @@
     <title>Habit Track</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href='../stylesheets/style.css'>
-    <link href="https://fonts.googleapis.com/css?family=Alike+Angular|Concert+One|Space+Mono:400,700|Tillana" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Alike+Angular|Concert+One|Space+Mono:400,700|Tillana|Roboto" rel="stylesheet">
     <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
+    <link rel="stylesheet" type="text/css" href='../stylesheets/style.css'>
 
 </head>
 <body>
@@ -15,13 +15,13 @@
 
 <div class="container">
 
-    <div class="page-header text-center">
-        <h1><span class="fa fa-user"></span> Profile Page</h1>
-        <% if (user.quiz.status) { %>
+    <!-- <div class="page-header text-center"> -->
+        <!-- <h1><span class="fa fa-user"></span> Welcome, <%= user.local.email %></h1> -->
+        <!-- <% if (user.quiz.status) { %>
         <a href="/choose-habit" class="btn btn-default btn-lg">Choose Habit</a>
         <% } %>
-        <input class="btn btn-default btn-lg" id="js-account-button" type="submit" value="Account">
-    </div>
+        <input class="btn btn-default btn-lg" id="js-account-button" type="submit" value="Account"> -->
+    <!-- </div> -->
 
     <div class="row hidden js-account-details">
         <!-- LOCAL INFORMATION -->
@@ -114,11 +114,12 @@
 <div class="row">
     <div class="col-md-12 assessment-box">
         <% if (!user.quiz.status) { %>
-            <div class="assessment-instructions text-center">
-                <h4>Welcome to Habit Track!</h4><p>To get started, please complete this Habit Assessment for recommendations on a Habit to begin working on.</p>
+            <div class="card">
+                <h2>Welcome to Habit Track!</h2><p>To get started, please complete this Habit Assessment for recommendations on a Habit to begin working on.</p>
             </div>
-            <h2>Habit Assessment</h2>
-                <form action="/submit-quiz" method="post" class="habit-assessment">
+            
+                <form action="/submit-quiz" method="post" class="card habit-assessment">
+                    <h2>Habit Assessment</h2>
                     <% for(var i=0; i < questions.length; i++) { %>
                         <p><b><%= questions[i].text %>:</b></p>
                             <% for(var j=0; j < questions[i].answers.length; j++) { %>
@@ -140,14 +141,21 @@
 
 
 <% if (user.quiz.status) { %>
-    <div class="row user-stats-box">
-<!--         <div class="col-md-12">
-            <h2>Your Stats</h2>
-        </div> -->
 
-        <div class="col-sm-8 user-stats-community">
-            <div class="user-stats-details">
-                <h2>Your Progress</h2>
+    <div class="card row daily-habit-tip">
+        <div class="col-md-12">
+            <h3><i class="far fa-lightbulb"></i><span>Daily Habit Tip</span></h3>
+            <p><%= tip %></p>
+            <% if (user.quiz.status) { %>
+                <a href="/choose-habit" class="btn btn-default btn-lg">Choose Habit</a>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="row user-stats-box">
+        <div class="col-sm-6 user-stats-community">
+            <div class="card user-stats-details">
+                <h3><i class="fas fa-tasks"></i><span>Your Progress</span></h3>
                 <ul>
                     <li>Current Habit: <%= user.habit.currentHabit %></li>
                     <li>Days on this Habit: <%= daysOnHabit %> </li>
@@ -155,8 +163,9 @@
                     <li>Best Streak: <span id="js-best-streak"><%= user.habit.bestStreak %></span></li>
                 </ul>
             </div>
-            <div class="current-day-box">
-            <h2>Current Day</h2>
+            <div class="card current-day-box">
+            <h3><i class="far fa-calendar-check"></i><span>Current Day</span></h3>
+            <h4 id="js-current-message"></h4>
             <% if (!dateCheck)  { %>
                 <form class='js-current-day'>
                     <fieldset>
@@ -172,26 +181,23 @@
                     </fieldset>
                     <input class="btn btn-lg btn-primary" type="submit" value="Submit">
                 </form>
+            <% } else { %>
+                <p>You have already updated your progress today!</p>
             <% } %>
-            <h3>Daily Habit Tip</h3>
-            <p><%= tip %></p>
-            <h3 id="js-current-message"></h3>
         </div>
         </div>
 
-        <div class="col-sm-4 user-stats-graph">
+        <div class="col-sm-6 user-stats-graph">
             <% include includes/progress.ejs %>
         </div>
     </div>
 
 
-    <div class="row community-box">
+    <div class="card row community-box">
         <div class="col-md-12">
             <h2>Community News</h2>
             <ul>
                 <li>There are <%= currentHabitUsers %> other people working on <%= user.habit.currentHabit %>!</li>
-                <li>Ex. "Jane D. just finished 30 days working on water!"</li>
-                <li>Ex. "John D just started working on stress!"</li>
             </ul>
         </div>
     </div>
