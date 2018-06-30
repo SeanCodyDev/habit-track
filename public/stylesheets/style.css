@@ -271,7 +271,8 @@ text {
 
 .info-card p, .info-card li {
 	text-align: left;
-	font-size: 1.6vw;
+	font-size: 16px;
+	margin: 20px 10px 10px 10px;
 }
 
 .col-sm-6 {
